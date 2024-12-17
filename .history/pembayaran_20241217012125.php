@@ -1,0 +1,87 @@
+<?php
+require "koneksi.php"; // Pastikan file koneksi sudah benar
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <?php require "navbar.php"; ?>
+
+    <div class="container mt-4">
+        <h1 class="mb-4">Halaman Pembayaran</h1>
+        
+        <!-- Form untuk input pembayaran -->
+        <div class="card mb-4">
+            <div class="card-header">Form Pembayaran</div>
+            <div class="card-body">
+                <form action="proses_pembayaran.php" method="POST">
+                    <div class="mb-3">
+                        <label for="user_id" class="form-label">ID Pengguna</label>
+                        <input type="number" name="user_id" id="user_id" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="total_harga" class="form-label">Total Harga</label>
+                        <input type="number" step="0.01" name="total_harga" id="total_harga" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="metode_pembayaran" class="form-label">Metode Pembayaran</label>
+                        <select name="metode_pembayaran" id="metode_pembayaran" class="form-select" required>
+                            <option value="Transfer Bank">Transfer Bank</option>
+                            <option value="E-Wallet">E-Wallet</option>
+                            <option value="Kartu Kredit">Kartu Kredit</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabel untuk menampilkan data pembayaran -->
+        <div class="card">
+            <div class="card-header">Daftar Pembayaran</div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>ID Pengguna</th>
+                            <th>Total Harga</th>
+                            <th>Metode Pembayaran</th>
+                            <th>Status</th>
+                            <th>Tanggal Pembayaran</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $query = "SELECT * FROM pembayaran";
+                        $result = mysqli_query($koneksi, $query);
+
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo "<tr>
+                                <td>{$row['id']}</td>
+                                <td>{$row['user_id']}</td>
+                                <td>Rp " . number_format($row['total_harga'], 2, ',', '.') . "</td>
+                                <td>{$row['metode_pembayaran']}</td>
+                                <td>{$row['status_pembayaran']}</td>
+                                <td>{$row['tanggal_pembayaran']}</td>
+                            </tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="fontawesome/js/all.min.js"></script>
+</body>
+</html>
